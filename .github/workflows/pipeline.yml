@@ -1,12 +1,24 @@
 name: CI Pipeline do Claudio
-on: [push]
+
+on:
+  push:
+    branches: [ "main" ]
+
 jobs:
   validacao:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do codigo
-        uses: actions/checkout@v3
-      - name: Validar Dockerfile (Hadolint)
+      - uses: actions/checkout@v4
+      - name: Hadolint Dockerfile check
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
+
+  build_imagem:
+    needs: validacao  # Só constrói se o Lint passar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build Docker Image
+        run: docker build -t meu-app-python:latest .
