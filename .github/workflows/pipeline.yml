@@ -27,5 +27,5 @@ jobs:
         with:
           context: .
           push: true
-          # A linha que você confirmou:
-          tags: bicharada1994/projeto-cicd-python:latest
+          # Atualizado para o seu novo usuário do Docker Hub
+          tags: claudiosanroman23/projeto-cicd-python:latest
