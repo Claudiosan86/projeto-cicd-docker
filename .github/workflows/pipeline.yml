@@ -1,31 +1,36 @@
 name: CI/CD Pipeline Docker Hub
 
-# O gatilho: roda sempre que você der 'git push' na branch main
+# Gatilho de execução: monitora a branch principal (main)
 on:
   push:
     branches: [ "main" ]
 
 jobs:
   build-and-push:
+    # Utiliza uma máquina virtual (runner) limpa com a última versão do Ubuntu
     runs-on: ubuntu-latest
     
     steps:
-      # 1. Baixa o código do seu GitHub para a máquina que vai rodar o job
+      # Passo 1: Clona o código do repositório para dentro do runner do GitHub
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Faz o login no Docker Hub usando os Secrets que você criou
+      # Passo 2: Autenticação segura no Docker Hub
+      # Utiliza as variáveis de ambiente (Secrets) configuradas no GitHub Settings
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 3. Constrói a imagem Docker e envia para o seu repositório
+      # Passo 3: Processamento da Imagem e Deploy (Push)
+      # Constrói a imagem baseada no Dockerfile e a envia para o Registry
       - name: Build and Push
         uses: docker/build-push-action@v4
         with:
+          # Define o contexto da build (diretório atual)
           context: .
+          # Habilita o envio para o Docker Hub após a construção com sucesso
           push: true
-          # Atualizado para o seu novo usuário do Docker Hub
-          tags: claudiosanroman23/projeto-cicd-python:latest
+          # Namespace (claudiosanroman) + nome da imagem + tag de versão (latest)
+          tags: claudiosanroman/projeto-cicd-python:latest
